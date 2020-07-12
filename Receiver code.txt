@@ -1,0 +1,175 @@
+#include "LPC214x.h"
+#define LCD_DATA	0xFF<<18
+#define RS	1<<16
+#define EN	1<<17
+#define LCD	(LCD_DATA | RS | EN)
+#define buzz   (1 << 5)
+void lcd_init(void);
+void lcd_cmd(char ch);
+void lcd_data(char ch);
+void lcd_str(char str[16]);
+
+ 	 void ddelay(int count)
+{
+  int j=0,i=0;
+
+  for(j=0;j<count;j++)
+  {
+    for(i=0;i<1000;i++);
+  }
+}  
+
+unsigned char rxu0()
+{
+unsigned char p;
+p=U0RBR;
+return p;
+}
+
+int main()
+{
+    int q=0;
+st:	
+	lcd_init();
+	lcd_cmd(0x01);
+	lcd_cmd(0x80);
+	lcd_str("     WELCOME    ");
+	lcd_cmd(0xC0);
+	lcd_str("WAITS FOR ORDER "); 
+	U0DLL=96;//9600 baud rate
+	IO0CLR |= buzz;
+	while(1){
+			  q=rxu0();
+	lcd_cmd(0x80);
+	lcd_data(q);
+			  if(q==0x31)
+			  {
+	lcd_cmd(0x80);
+	lcd_str("     TABLE 1    ");
+	lcd_cmd(0xC0);
+	lcd_str(" JUICE  ORDERED "); 
+				  IO0SET |= buzz;
+  ddelay(10000);
+  ddelay(10000);
+  ddelay(10000);
+  goto st; }
+
+			  if(q==0x32)
+			  {
+	lcd_cmd(0x80);
+	lcd_str("     TABLE 1    ");
+	lcd_cmd(0xC0);
+	lcd_str(" COFFEE  ORDERED"); 
+				  IO0SET |= buzz;
+  ddelay(10000);
+  ddelay(10000);
+  ddelay(10000);
+  goto st; }
+
+			  if(q==0x33)
+			  {
+	lcd_cmd(0x80);
+	lcd_str("     TABLE 1    ");
+	lcd_cmd(0xC0);
+	lcd_str(" DRINK  ORDERED "); 
+				  IO0SET |= buzz;
+  ddelay(10000);
+  ddelay(10000);
+  ddelay(10000);
+  goto st; }
+
+			  if(q==0x34)
+			  {
+	lcd_cmd(0x80);
+	lcd_str("     TABLE 2    ");
+	lcd_cmd(0xC0);
+	lcd_str("ICECREAM  ORDERD"); 
+				  IO0SET |= buzz;
+  ddelay(10000);
+  ddelay(10000);
+  ddelay(10000);
+  goto st; }
+			  if(q==0x35)
+			  {
+	lcd_cmd(0x80);
+	lcd_str("     TABLE 2    ");
+	lcd_cmd(0xC0);
+	lcd_str("BURGER  ORDERED ");  
+				  IO0SET |= buzz;
+  ddelay(10000);
+  ddelay(10000);
+  ddelay(10000);
+  goto st; }
+			  if(q==0x36)
+			  {
+	lcd_cmd(0x80);
+	lcd_str("     TABLE 2    ");
+	lcd_cmd(0xC0);
+	lcd_str("SNACKS  ORDERED "); 
+				  IO0SET |= buzz;
+  ddelay(10000);
+  ddelay(10000);
+  ddelay(10000);
+  goto st; }
+			  if(q==0x37)
+			  {
+	lcd_cmd(0x80);
+	lcd_str("     TABLE 3    ");
+	lcd_cmd(0xC0);
+	lcd_str("  TEA  ORDERED  "); 
+				  IO0SET |= buzz;
+  ddelay(10000);
+  ddelay(10000);
+  ddelay(10000);
+  goto st; }
+			  if(q==0x38)
+			  {
+	lcd_cmd(0x80);
+	lcd_str("     TABLE 3    ");
+	lcd_cmd(0xC0);
+	lcd_str(" PIZZA  ORDERED ");  
+				  IO0SET |= buzz;
+  ddelay(10000);
+  ddelay(10000);
+  ddelay(10000);
+  goto st; }                
+
+ 
+ }	 }
+  void lcd_init(void)
+{
+	lcd_cmd(0x38);
+	lcd_cmd(0x01);
+	lcd_cmd(0x80);
+}
+
+void lcd_cmd(char ch)
+{
+	IOCLR1=LCD_DATA;
+	IOSET1=ch<<18;
+	IOCLR1=RS;
+	IOSET1=EN;
+	IOCLR1=EN;
+}
+
+void lcd_data(char ch)
+{
+	IOCLR1=LCD_DATA;
+	IOSET1=ch<<18;
+	IOSET1=RS;
+	IOSET1=EN;
+	IOCLR1=EN;
+}
+
+void lcd_str(char str[16])
+{
+	int k;
+	for(k=0;k<16;k++)
+	{
+		if(str[k]=='\0')
+			break;
+		lcd_data(str[k]);
+
+	}
+}
+

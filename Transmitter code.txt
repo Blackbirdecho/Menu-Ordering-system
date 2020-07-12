@@ -1,0 +1,183 @@
+
+CNT2      DATA   23H
+CNT1      DATA   24H
+STOR1     DATA   25H
+STOR2     DATA   26H
+
+
+ORG     0000H   
+ST:
+MOV     R1,#40H
+MOV     SCON,#50H
+MOV     TMOD,#20H
+MOV     TH1,#0FDH
+SETB    TR1
+
+MAIN:             JNB     RI,main
+                  CLR     RI
+		  MOV     A,SBUF
+		  CJNE    A,#'T',MAIN
+
+MAINX:  JNB     RI,$
+	CLR     RI
+	MOV     A,SBUF
+	CJNE    A,#'R',MAINX
+        JNB     RI,$
+	CLR     RI
+	MOV     A,SBUF
+        MOV     @R1,A
+        INC     R1
+
+        JNB     RI,$
+	CLR     RI
+	MOV     A,SBUF
+        MOV     @R1,A
+        INC     R1
+
+	JNB     RI,$
+	CLR     RI
+	MOV     A,SBUF
+        MOV     @R1,A
+        INC     R1
+
+        JNB     RI,$
+	CLR     RI
+	MOV     A,SBUF
+        MOV     @R1,A
+        INC     R1
+
+
+        JNB     RI,$
+	CLR     RI
+	MOV     A,SBUF
+        MOV     @R1,A
+        INC     R1
+
+        JNB     RI,$
+	CLR     RI
+	MOV     A,SBUF
+        MOV     @R1,A
+        INC     R1
+
+        JNB     RI,$
+	CLR     RI
+	MOV     A,SBUF
+        MOV     @R1,A
+        INC     R1
+
+        JNB     RI,$
+	CLR     RI
+	MOV     A,SBUF
+        MOV     @R1,A
+        INC     R1
+
+        JNB     RI,$
+	CLR     RI
+	MOV     A,SBUF
+        MOV     @R1,A
+        INC     R1
+
+
+        MOV     R1,#40H
+TSKK2:  MOV     A,@R1
+        INC     R1
+	MOV     A,R1
+	CJNE    A,#49H,TSKK2
+	MOV     R1,#40H
+
+        MOV     R1,#41H
+        MOV     A,@R1
+	MOV     B,#0AH
+	MUL     AB
+	MOV     CNT2,A
+	MOV     R1,#42H
+        MOV     A,@R1
+	ADD     A,CNT2
+	MOV     STOR1,A
+
+        MOV     R1,#46H
+        MOV     A,@R1
+	MOV     B,#0AH
+	MUL     AB
+	MOV     CNT1,A
+	MOV     R1,#47H
+        MOV     A,@R1
+	ADD     A,CNT1
+	MOV     STOR2,A
+
+	MOV     A,STOR1
+	CJNE    A,#56D,XX
+XX:     JC      CLMN1
+        LJMP    CLMN2
+
+CLMN1:  MOV     A,STOR2
+        CJNE    A,#75D,A1
+A1:     JNC     ONE
+        CJNE    A,#53D,B1
+B1:     JNC     TWO
+        CJNE    A,#30D,C1
+C1:     JNC     THREE
+        LJMP    FOUR
+
+CLMN2:  MOV     A,STOR2
+        CJNE    A,#75D,A1X
+A1X:    JNC     FIVE
+        CJNE    A,#53D,B1X
+B1X:    JNC     SIX
+        CJNE    A,#30D,C1X
+C1X:    JNC     SEVEN
+        LJMP    EIGHT
+
+ONE:  
+        MOV     SBUF,#31H
+	JNB     TI,$
+	CLR     TI
+	LJMP    ST
+
+TWO:  
+        MOV     SBUF,#32H
+	JNB     TI,$
+	CLR     TI
+	LJMP    ST
+
+
+THREE:  
+        MOV     SBUF,#33H
+	JNB     TI,$
+	CLR     TI
+	LJMP    ST
+
+FOUR:  
+        MOV     SBUF,#34H
+	JNB     TI,$
+	CLR     TI
+	LJMP    ST
+
+FIVE:  
+        MOV     SBUF,#35H
+	JNB     TI,$
+	CLR     TI
+	LJMP    ST
+
+SIX:  
+        MOV     SBUF,#36H
+	JNB     TI,$
+	CLR     TI
+	LJMP    ST
+
+SEVEN:  
+        MOV     SBUF,#37H
+	JNB     TI,$
+	CLR     TI
+	LJMP    ST
+
+EIGHT:  
+        MOV     SBUF,#38H
+	JNB     TI,$
+	CLR     TI
+	LJMP    ST
+
+
+        END
+                      
+
